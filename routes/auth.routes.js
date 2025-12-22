@@ -1,13 +1,24 @@
-import express from 'express';
-import jwt from 'jsonwebtoken';
+import express from "express";
+import {
+  signin,
+  logout,
+  signup,
+  forgotPassword,
+  resetPassword,
+  refreshToken,
+} from "../controllers/auth.controller.js";
+import {
+  validateSignup,
+  validatePasswordReset,
+} from "../validators/auth.validator.js";
 
-export const authRouter = express.Router();
+const router = express.Router();
 
-authRouter.post('/generate-token', (req, res) => {
-  const token = jwt.sign(
-    { userId: 'test-user-123' },
-    process.env.JWT_SECRET,
-    { expiresIn: '7d' }
-  );
-  res.json({ success: true, token });
-});
+router.post("/signup", validateSignup, signup);
+router.post("/signin", signin);
+router.post("/logout", logout);
+router.post("/forgot-password", forgotPassword);
+router.post("/reset-password", validatePasswordReset, resetPassword);
+router.post("/refresh-token", refreshToken);
+
+export default router;

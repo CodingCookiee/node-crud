@@ -1,19 +1,27 @@
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 import { createError } from "../lib/createError.util.js";
+import { User } from "../models/user.model.js";
 
-
-export const verifyToken = (req, res, next) => {
-  const token = req.headers.authorization?.split(' ')[1];
-  
-  if (!token) {
-    throw createError(401, "Access token required");
-  }
-  
+export const authenticateUser = async (req, res, next) => {
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const accessToken = req.cookies.accessToken;
+
+    if (!accessToken) {
+      throw createError(401, "Access token required - Unauthorized");
+    }
+
+    const decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
     req.user = decoded;
     next();
   } catch (error) {
-    throw createError(403, "Invalid or expired token");
+    next(error);
+  }
+};
+
+export const authenticateAdmin = async (req, res, next) => {
+  if (req.user && req.user.role === "admin") {
+    next();
+  } else {
+    return next(createError(403, "Access denied - Admins only"));
   }
 };

@@ -4,8 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { errorHandler } from "./middleware/errorHandler.middleware.js";
 import { connectToDatabase } from "./config/database.config.js";
-import { router } from "./routes/task.routes.js";
-import { authRouter } from "./routes/auth.routes.js";
+import routes from "./routes/index.js";
 
 dotenv.config();
 
@@ -18,8 +17,9 @@ app.use(cors());
 app.use(cookieParser());
 
 // Routes
-app.use("/api/auth", authRouter);
-app.use("/api/tasks", router);
+app.use("/api/auth", routes.authRoutes);
+app.use("/api/users", routes.userRoutes);
+app.use("/api/tasks", routes.taskRoutes);
 
 app.get("/", (req, res) => {
   res.send("The Server is running: Use /api to Run Tests");
