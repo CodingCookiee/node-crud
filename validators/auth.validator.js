@@ -21,11 +21,9 @@ export const validateSignup = (req, res, next) => {
   const { email, password, name } = req.body;
 
   if (!validateEmail(email)) {
-    return res
-      .status(400)
-      .json({
-        message: "Invalid email. Please enter a valid email to signup.",
-      });
+    return res.status(400).json({
+      message: "Invalid email. Please enter a valid email to signup.",
+    });
   }
 
   if (!validatePassword(password)) {

@@ -23,7 +23,7 @@ router.put(
 );
 router.get("/", authenticateUser, authenticateAdmin, getAllUsers);
 router.post(
-  "/:userId/force-logout",
+  "/force-logout/:userId",
   authenticateUser,
   authenticateAdmin,
   forceLogoutUser
