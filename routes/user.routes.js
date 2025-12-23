@@ -10,11 +10,17 @@ import {
   getAllUsers,
   forceLogoutUser,
 } from "../controllers/user.controller.js";
+import { validateProfileUpdate } from "../validators/auth.validator.js";
 
 const router = express.Router();
 
 router.get("/profile/:userId", authenticateUser, getProfile);
-router.put("/profile/:userId", authenticateUser, updateProfile);
+router.put(
+  "/profile/:userId",
+  authenticateUser,
+  validateProfileUpdate,
+  updateProfile
+);
 router.get("/", authenticateUser, authenticateAdmin, getAllUsers);
 router.post(
   "/:userId/force-logout",

@@ -1,41 +1,42 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, "Name is required."],
-    validate: {
-      validator: function (v) {
-        return /^[a-zA-Z\s]+$/.test(v);
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: [true, "Name is required."],
+      validate: {
+        validator: function (v) {
+          return /^[a-zA-Z\s]+$/.test(v);
+        },
+        message: (props) =>
+          `${props.value} is not a valid name! Name must only contain letters and spaces `,
       },
-      message: (props) =>
-        `${props.value} is not a valid name! Name must only contain letters and spaces `,
+    },
+    email: {
+      type: String,
+      required: [true, "Email is required."],
+      validate: {
+        validator: function (v) {
+          return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+        },
+        message: (props) => `${props.value} is not a valid email address!`,
+      },
+    },
+    password: {
+      type: String,
+      required: [true, "Password is required."],
+    },
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
     },
   },
-  email: {
-    type: String,
-    required: [true, "Email is required."],
-    validate: {
-      validator: function (v) {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-      },
-      message: (props) => `${props.value} is not a valid email address!`,
-    },
-  },
-  password: {
-    type: String,
-    required: [true, "Password is required."],
-  },
-  role: {
-    type: String,
-    enum: ["user", "admin"],
-    default: "user",
-  },
-},
-{
-  timestamps: true
-}
+  {
+    timestamps: true,
+  }
 );
 
 // Hash password before saving it to db

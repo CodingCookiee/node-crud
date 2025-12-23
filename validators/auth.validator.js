@@ -21,7 +21,11 @@ export const validateSignup = (req, res, next) => {
   const { email, password, name } = req.body;
 
   if (!validateEmail(email)) {
-    return res.status(400).json({ message: "Invalid email. Please enter a valid email to signup." });
+    return res
+      .status(400)
+      .json({
+        message: "Invalid email. Please enter a valid email to signup.",
+      });
   }
 
   if (!validatePassword(password)) {
@@ -45,6 +49,19 @@ export const validatePasswordReset = (req, res, next) => {
   const { newPassword } = req.body;
 
   if (!validatePassword(newPassword)) {
+    return res.status(400).json({
+      message:
+        "Password must contain at least 8 characters, including uppercase, lowercase, numbers, and special characters",
+    });
+  }
+
+  next();
+};
+
+export const validateProfileUpdate = (req, res, next) => {
+  const { password } = req.body;
+
+  if (password && !validatePassword(password)) {
     return res.status(400).json({
       message:
         "Password must contain at least 8 characters, including uppercase, lowercase, numbers, and special characters",
