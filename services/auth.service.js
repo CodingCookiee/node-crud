@@ -12,14 +12,14 @@ import jwt from "jsonwebtoken";
 
 export const authService = {
     signup: async (userData) => {
-        const { name, email, password } = userData;
+        const { name, email, password, role } = userData;
 
         const userExists = await User.findOne({email: email});
         if(userExists){
             throw createError(400, 'Email already exist, please use a different email')
         }
 
-        const user = new User ({ name, email, password });
+        const user = new User ({ name, email, password, role });
         await user.save();
         return user;
     },
@@ -39,14 +39,14 @@ export const authService = {
     },
 
     handleTokens: async (user, res) => {
-      const accessToken = generateAccessToken(user._id);
+      const accessToken = generateAccessToken(user._id, user.role);
       const refreshToken = generateRefreshToken(user._id);
       setCookies(res, accessToken, refreshToken);
     },
 
     logout: async (refreshToken) => {
         if(!refreshToken){
-            throw createError(401, 'No refresh token found')
+            throw createError(401, 'No refresh token found- User May have been logged out.')
         }
         try {
             const decoded = jwt.verify(
@@ -66,6 +66,7 @@ export const authService = {
     }
 
     const resetToken = generateResetToken(user._id);
+    return resetToken;
   },
     resetPassword: async (resetToken, newPassword) => {
       const decoded = verifyResetToken(resetToken);

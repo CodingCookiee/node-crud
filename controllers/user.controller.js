@@ -1,10 +1,10 @@
 import { User } from "../models/user.model.js";
 import { createError } from "../lib/createError.util.js";
 
-
 export const getProfile = async (req, res, next) => {
   try {
-    const user = await User.findById(req.user.id).select('-password');
+    const userId = req.params.userId || req.user.id;
+    const user = await User.findById(userId).select("-password");
     if (!user) {
       return next(createError(404, "User not found"));
     }
@@ -14,9 +14,9 @@ export const getProfile = async (req, res, next) => {
   }
 };
 
-export const getAllUser = async (req, res, next) => {
+export const getAllUsers = async (req, res, next) => {
   try {
-    const users = await User.find().select('-password');
+    const users = await User.find().select("-password");
     res.status(200).json(users);
   } catch (error) {
     next(error);
@@ -25,23 +25,33 @@ export const getAllUser = async (req, res, next) => {
 
 export const updateProfile = async (req, res, next) => {
   try {
+    const userId = req.params.userId || req.user.id;
     const { name, email, password } = req.body;
 
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(userId);
     if (!user) {
       return next(createError(404, "User not found"));
     }
 
-    if (name && name === user.name) {
-      throw createError(400, 'Please use a different name than your current one.');
-    }
+    // if (name && name === user.name) {
+    //   throw createError(
+    //     400,
+    //     "Please use a different name than your current one."
+    //   );
+    // }
 
     if (email && email === user.email) {
-      throw createError(400, 'Please use a different email than your current one.');
+      throw createError(
+        400,
+        "Please use a different email than your current one."
+      );
     }
 
     if (password && (await user.comparePassword(password))) {
-      throw createError(400, 'New password must be different from your current one.');
+      throw createError(
+        400,
+        "New password must be different from your current one."
+      );
     }
 
     if (name) user.name = name;
@@ -61,14 +71,13 @@ export const updateProfile = async (req, res, next) => {
 export const forceLogoutUser = async (req, res, next) => {
   try {
     const { userId } = req.params;
-    res.clearCookie('accessToken');
-    res.clearCookie('refreshToken');
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
     res.status(200).json({ message: "User logged out successfully." });
   } catch (error) {
     next(error);
   }
 };
-
 
 export const deleteUser = async (req, res, next) => {
   try {
