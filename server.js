@@ -23,6 +23,7 @@ app.use("/api/tasks", routes.taskRoutes);
 app.use("/api/products", routes.productRoutes);
 app.use("/api/categories", routes.categoryRoutes);
 app.use("/api/cart", routes.cartRoutes);
+app.use("/api/orders", routes.orderRoutes);
 
 app.get("/", (req, res) => {
   res.send("The Server is running: Use /api to Run Tests");
