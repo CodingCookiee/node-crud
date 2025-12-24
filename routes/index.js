@@ -3,6 +3,7 @@ import userRoutes from "./user.routes.js";
 import taskRoutes from "./task.routes.js";
 import productRoutes from "./product.routes.js";
 import categoryRoutes from "./category.routes.js";
+import cartRoutes from "./cart.routes.js";
 
 export default {
   authRoutes,
@@ -10,4 +11,5 @@ export default {
   taskRoutes,
   productRoutes,
   categoryRoutes,
+  cartRoutes,
 };
