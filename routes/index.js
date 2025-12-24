@@ -4,7 +4,7 @@ import taskRoutes from "./task.routes.js";
 import productRoutes from "./product.routes.js";
 import categoryRoutes from "./category.routes.js";
 import cartRoutes from "./cart.routes.js";
-import orderRoutes from "./order.routes.js"
+import orderRoutes from "./order.routes.js";
 
 export default {
   authRoutes,
@@ -13,5 +13,5 @@ export default {
   productRoutes,
   categoryRoutes,
   cartRoutes,
-  orderRoutes
+  orderRoutes,
 };
