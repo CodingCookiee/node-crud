@@ -6,6 +6,7 @@ import categoryRoutes from "./category.routes.js";
 import cartRoutes from "./cart.routes.js";
 import orderRoutes from "./order.routes.js";
 import reviewRoutes from "./review.routes.js";
+import uploadRoutes from "./upload.routes.js";
 
 export default {
   authRoutes,
@@ -16,4 +17,5 @@ export default {
   cartRoutes,
   orderRoutes,
   reviewRoutes,
+  uploadRoutes,
 };
