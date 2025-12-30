@@ -1,5 +1,6 @@
 import http from "http";
 import helmet from "helmet";
+import morgan from "morgan";
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
@@ -15,6 +16,7 @@ import {
   paymentLimiter,
 } from "./config/rateLimiter.config.js";
 import { swaggerUiServe, swaggerUiSetup } from "./config/swagger.config.js";
+import { logger, morganStream } from "./config/logger.config.js";
 
 dotenv.config();
 
@@ -32,6 +34,7 @@ app.post(
 
 // Middleware
 app.use(helmet());
+app.use(morgan("combined", { stream: morganStream }));
 app.use(express.json({ limit: "10mb" }));
 app.use(
   cors({
@@ -71,8 +74,11 @@ initializeSocket(server);
 server
   .listen(port, async () => {
     await connectToDatabase();
-    console.log(`Server is running on http://localhost:${port}`);
+    logger.info(`Server is running on http://localhost:${port}`);
+    logger.info(
+      `API Documentation available at http://localhost:${port}/api-docs`
+    );
   })
   .on("error", (err) => {
-    console.error("Server Error", err);
+    logger.error("Server Error", err);
   });
