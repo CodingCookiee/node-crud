@@ -7,7 +7,7 @@ import {
   verifyResetToken,
 } from "../lib/token.utils.js";
 import { createError } from "../lib/createError.util.js";
-import { sendWelcomeEmail } from "./email.service.js";
+import { sendWelcomeEmail, sendPasswordResetEmail } from "./email.service.js";
 import jwt from "jsonwebtoken";
 
 
@@ -73,6 +73,12 @@ export const authService = {
     }
 
     const resetToken = generateResetToken(user._id);
+    
+    // send password reset email (non-blocking)
+    sendPasswordResetEmail(user.email, resetToken).catch(err =>
+      console.error('Password reset email failed:', err)
+    );
+    
     return resetToken;
   },
     resetPassword: async (resetToken, newPassword) => {

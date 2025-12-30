@@ -51,3 +51,14 @@ export const sendOrderStatusEmail = async (userEmail, orderDetails) => {
 
   await sendEmail(userEmail, subject, html);
 };
+
+export const sendPasswordResetEmail = async (userEmail, resetLink) => {
+  const subject = "Password Reset Request";
+  const html = `
+        <h1>Password Reset Request</h1>
+        <p>You requested to reset your password. Click the link below to proceed.</p>
+        <a href="${resetLink}">Reset Password</a>
+        <p>If you did not request this, please ignore this email.</p>
+    `;
+  await sendEmail(userEmail, subject, html);
+};
