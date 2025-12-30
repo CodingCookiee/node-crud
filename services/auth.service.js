@@ -7,6 +7,7 @@ import {
   verifyResetToken,
 } from "../lib/token.utils.js";
 import { createError } from "../lib/createError.util.js";
+import { sendWelcomeEmail } from "./email.service.js";
 import jwt from "jsonwebtoken";
 
 
@@ -21,6 +22,12 @@ export const authService = {
 
         const user = new User ({ name, email, password, role });
         await user.save();
+        
+        // send welcome email (non-blocking)
+        sendWelcomeEmail(user.email, user.name).catch(err => 
+          console.error('Welcome email failed:', err)
+        );
+        
         return user;
     },
 
