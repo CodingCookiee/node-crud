@@ -59,9 +59,13 @@ const orderSchema = new mongoose.Schema(
       required: true,
       enum: ["card", "paypal", "cod"],
     },
+    paymentIntentId: {
+      type: String,
+      default: null,
+    },
     paymentStatus: {
       type: String,
-      enum: ["pending", "paid", "failed"],
+      enum: ["pending", "completed", "failed"],
       default: "pending",
     },
     orderStatus: {

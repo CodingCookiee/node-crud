@@ -9,6 +9,7 @@ import reviewRoutes from "./review.routes.js";
 import uploadRoutes from "./upload.routes.js";
 import wishlistRoutes from "./wishlist.routes.js";
 import couponRoutes from "./coupon.routes.js";
+import paymentRoutes from "./payment.routes.js";
 
 export default {
   authRoutes,
@@ -22,4 +23,5 @@ export default {
   uploadRoutes,
   wishlistRoutes,
   couponRoutes,
+  paymentRoutes,
 };

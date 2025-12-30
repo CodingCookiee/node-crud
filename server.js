@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import { errorHandler } from "./middleware/errorHandler.middleware.js";
 import { connectToDatabase } from "./config/database.config.js";
 import { initializeSocket } from "./config/socket.config.js";
+import { stripeWebhook } from "./controllers/payment.controller.js";
 import routes from "./routes/index.js";
 
 dotenv.config();
@@ -14,6 +15,13 @@ const port = process.env.PORT || 3000;
 const app = express();
 
 const server = http.createServer(app);
+
+// Stripe webhook route BEFORE express.json() (needs raw body)
+app.post(
+  "/api/payment/webhook",
+  express.raw({ type: "application/json" }),
+  stripeWebhook
+);
 
 // Middleware
 app.use(express.json());
@@ -32,6 +40,7 @@ app.use("/api/reviews", routes.reviewRoutes);
 app.use("/api/upload", routes.uploadRoutes);
 app.use("/api/wishlist", routes.wishlistRoutes);
 app.use("/api/coupons", routes.couponRoutes);
+app.use("/api/payment", routes.paymentRoutes);
 
 app.get("/", (req, res) => {
   res.send("The Server is running: Use /api to Run Tests");
