@@ -14,6 +14,7 @@ import {
   authLimiter,
   paymentLimiter,
 } from "./config/rateLimiter.config.js";
+import { swaggerUiServe, swaggerUiSetup } from "./config/swagger.config.js";
 
 dotenv.config();
 
@@ -58,6 +59,9 @@ app.use("/api/payment", paymentLimiter, routes.paymentRoutes);
 app.get("/", (req, res) => {
   res.send("The Server is running: Use /api to Run Tests");
 });
+
+// API Documentation
+app.use("/api-docs", swaggerUiServe, swaggerUiSetup);
 
 // middleware
 app.use(errorHandler);

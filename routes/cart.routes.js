@@ -10,15 +10,115 @@ import { authenticateUser } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
-//  add to cart
+/**
+ * @swagger
+ * /api/cart:
+ *   post:
+ *     summary: Add item to cart
+ *     tags: [Cart]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - productId
+ *               - quantity
+ *             properties:
+ *               productId:
+ *                 type: string
+ *               quantity:
+ *                 type: number
+ *                 example: 2
+ *     responses:
+ *       200:
+ *         description: Item added to cart
+ *       404:
+ *         description: Product not found
+ */
 router.post("/", authenticateUser, addToCart);
-//  get cart
+
+/**
+ * @swagger
+ * /api/cart:
+ *   get:
+ *     summary: Get user cart
+ *     tags: [Cart]
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       200:
+ *         description: Cart retrieved successfully
+ */
 router.get("/", authenticateUser, getCart);
-//  update cart item
+
+/**
+ * @swagger
+ * /api/cart/{productId}:
+ *   put:
+ *     summary: Update cart item quantity
+ *     tags: [Cart]
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: productId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - quantity
+ *             properties:
+ *               quantity:
+ *                 type: number
+ *                 example: 3
+ *     responses:
+ *       200:
+ *         description: Cart item updated
+ */
 router.put("/:productId", authenticateUser, updateCartItem);
-//  remove from cart
+
+/**
+ * @swagger
+ * /api/cart/{productId}:
+ *   delete:
+ *     summary: Remove item from cart
+ *     tags: [Cart]
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: productId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Item removed from cart
+ */
 router.delete("/:productId", authenticateUser, removeFromCart);
-//  clear cart
+
+/**
+ * @swagger
+ * /api/cart:
+ *   delete:
+ *     summary: Clear entire cart
+ *     tags: [Cart]
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       200:
+ *         description: Cart cleared successfully
+ */
 router.delete("/", authenticateUser, clearCart);
 
 export default router;
