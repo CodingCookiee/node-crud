@@ -8,6 +8,7 @@ import orderRoutes from "./order.routes.js";
 import reviewRoutes from "./review.routes.js";
 import uploadRoutes from "./upload.routes.js";
 import wishlistRoutes from "./wishlist.routes.js";
+import couponRoutes from "./coupon.routes.js";
 
 export default {
   authRoutes,
@@ -20,4 +21,5 @@ export default {
   reviewRoutes,
   uploadRoutes,
   wishlistRoutes,
+  couponRoutes,
 };
