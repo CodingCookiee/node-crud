@@ -67,8 +67,8 @@ Store in cloud (AWS S3 or Cloudinary)
 Wishlist
 Coupon/discount codes
 Email notifications (Nodemailer)
-Payment integration (Stripe webhook)
 Real-time notifications (Socket.io)
+Payment integration (Stripe webhook)
 Rate limiting & security (helmet, express-rate-limit)
 API documentation (Swagger)
 Logging (Winston/Morgan)
