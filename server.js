@@ -1,4 +1,5 @@
 import http from "http";
+import helmet from "helmet";
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
@@ -8,6 +9,11 @@ import { connectToDatabase } from "./config/database.config.js";
 import { initializeSocket } from "./config/socket.config.js";
 import { stripeWebhook } from "./controllers/payment.controller.js";
 import routes from "./routes/index.js";
+import {
+  generalLimiter,
+  authLimiter,
+  paymentLimiter,
+} from "./config/rateLimiter.config.js";
 
 dotenv.config();
 
@@ -24,12 +30,19 @@ app.post(
 );
 
 // Middleware
-app.use(express.json());
-app.use(cors());
+app.use(helmet());
+app.use(express.json({ limit: "10mb" }));
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    credentials: true,
+  })
+);
 app.use(cookieParser());
+app.use(generalLimiter);
 
 // Routes
-app.use("/api/auth", routes.authRoutes);
+app.use("/api/auth", authLimiter, routes.authRoutes);
 app.use("/api/users", routes.userRoutes);
 app.use("/api/tasks", routes.taskRoutes);
 app.use("/api/products", routes.productRoutes);
@@ -40,7 +53,7 @@ app.use("/api/reviews", routes.reviewRoutes);
 app.use("/api/upload", routes.uploadRoutes);
 app.use("/api/wishlist", routes.wishlistRoutes);
 app.use("/api/coupons", routes.couponRoutes);
-app.use("/api/payment", routes.paymentRoutes);
+app.use("/api/payment", paymentLimiter, routes.paymentRoutes);
 
 app.get("/", (req, res) => {
   res.send("The Server is running: Use /api to Run Tests");
