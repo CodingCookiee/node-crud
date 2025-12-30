@@ -3,7 +3,11 @@ import { Cart } from "../models/cart.model.js";
 import { Product } from "../models/product.model.js";
 import { User } from "../models/user.model.js";
 import { createError } from "../lib/createError.util.js";
-import { sendOrderConfirmationEmail, sendOrderStatusEmail } from "../services/email.service.js";
+import {
+  sendOrderConfirmationEmail,
+  sendOrderStatusEmail,
+} from "../services/email.service.js";
+import { emitToAdmins, emitToUser } from "../services/socket.service.js";
 
 export const createOrder = async (req, res, next) => {
   try {
@@ -51,12 +55,24 @@ export const createOrder = async (req, res, next) => {
     await order.save();
     await order.populate("items.product", "name price images");
 
+    // emit to User: Notification
+    emitToUser(userId, "order-created", {
+      orderId: order._id,
+      total: order.total,
+    });
+
+    //  emit to admins: Notification
+    emitToAdmins("order-created", {
+      orderId: order._id,
+      total: order.total,
+    });
+
     // send order confirmation email (non-blocking)
     const user = await User.findById(userId);
     sendOrderConfirmationEmail(user.email, {
       orderId: order._id,
-      total: order.total
-    }).catch(err => console.error('Order confirmation email failed:', err));
+      total: order.total,
+    }).catch((err) => console.error("Order confirmation email failed:", err));
 
     res.status(201).json({
       success: true,
@@ -156,12 +172,18 @@ export const updateOrderStatus = async (req, res, next) => {
       throw createError(404, "Order not found");
     }
 
+    // emit to User: Notification
+    emitToUser(order.user.toString(), "order-status-updated", {
+      orderId: order._id,
+      status: order.orderStatus,
+    });
+
     // send status update email (non-blocking)
     const user = await User.findById(order.user);
     sendOrderStatusEmail(user.email, {
       orderId: order._id,
-      status: order.orderStatus
-    }).catch(err => console.error('Status update email failed:', err));
+      status: order.orderStatus,
+    }).catch((err) => console.error("Status update email failed:", err));
 
     res.status(200).json({
       success: true,

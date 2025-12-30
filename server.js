@@ -1,15 +1,19 @@
+import http from "http";
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { errorHandler } from "./middleware/errorHandler.middleware.js";
 import { connectToDatabase } from "./config/database.config.js";
+import { initializeSocket } from "./config/socket.config.js";
 import routes from "./routes/index.js";
 
 dotenv.config();
 
 const port = process.env.PORT || 3000;
 const app = express();
+
+const server = http.createServer(app);
 
 // Middleware
 app.use(express.json());
@@ -36,7 +40,9 @@ app.get("/", (req, res) => {
 // middleware
 app.use(errorHandler);
 
-app
+initializeSocket(server);
+
+server
   .listen(port, async () => {
     await connectToDatabase();
     console.log(`Server is running on http://localhost:${port}`);
