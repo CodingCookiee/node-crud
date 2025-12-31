@@ -56,6 +56,34 @@ router.get("/search", restaurantController.searchRestaurants);
 
 /**
  * @swagger
+ * /api/restaurants:
+ *   get:
+ *     summary: Get all restaurants (Admin only)
+ *     tags: [Restaurants]
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: isApproved
+ *         schema:
+ *           type: boolean
+ *       - in: query
+ *         name: isActive
+ *         schema:
+ *           type: boolean
+ *     responses:
+ *       200:
+ *         description: List of all restaurants
+ */
+router.get(
+  "/",
+  authenticateUser,
+  authenticateAdmin,
+  restaurantController.getAllRestaurants
+);
+
+/**
+ * @swagger
  * /api/restaurants/{id}:
  *   get:
  *     summary: Get restaurant by ID (Public)
@@ -184,34 +212,6 @@ router.patch(
   "/:id/status",
   authenticateUser,
   restaurantController.updateStatus
-);
-
-/**
- * @swagger
- * /api/restaurants:
- *   get:
- *     summary: Get all restaurants (Admin only)
- *     tags: [Restaurants]
- *     security:
- *       - cookieAuth: []
- *     parameters:
- *       - in: query
- *         name: isApproved
- *         schema:
- *           type: boolean
- *       - in: query
- *         name: isActive
- *         schema:
- *           type: boolean
- *     responses:
- *       200:
- *         description: List of all restaurants
- */
-router.get(
-  "/",
-  authenticateUser,
-  authenticateAdmin,
-  restaurantController.getAllRestaurants
 );
 
 /**
