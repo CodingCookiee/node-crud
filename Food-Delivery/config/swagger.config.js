@@ -4,18 +4,18 @@ import swaggerUi from "swagger-ui-express";
 const swaggerDefinition = {
   openapi: "3.0.0",
   info: {
-    title: "E-Commerce API Documentation",
+    title: "Food Delivery API Documentation",
     version: "1.0.0",
     description:
-      "Comprehensive API documentation for E-Commerce platform with authentication, products, orders, payments, and more",
+      "Comprehensive API documentation for Food Delivery platform with multi-role authentication (customers, restaurants, drivers, admin), orders, real-time tracking, payments, and more",
     contact: {
       name: "API Support",
-      email: "support@ecommerce.com",
+      email: "support@fooddelivery.com",
     },
   },
   servers: [
     {
-      url: `http://localhost:${process.env.PORT || 8000}`,
+      url: `http://localhost:${process.env.PORT || 3000}`,
       description: "Development server",
     },
   ],

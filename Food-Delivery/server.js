@@ -9,7 +9,7 @@ import { errorHandler } from "./middleware/errorHandler.middleware.js";
 import { connectToDatabase } from "./config/database.config.js";
 // import { initializeSocket } from "./config/socket.config.js";
 // import { stripeWebhook } from "./controllers/payment.controller.js";
-// import routes from "./routes/index.js";
+import routes from "./routes/index.js";
 import {
   generalLimiter,
   authLimiter,
@@ -22,7 +22,6 @@ dotenv.config();
 
 const port = process.env.PORT || 3000;
 const app = express();
-
 
 // Middleware
 app.use(helmet());
@@ -37,8 +36,8 @@ app.use(
 app.use(cookieParser());
 app.use(generalLimiter);
 
-
 // Routes
+app.use("/api/auth", authLimiter, routes.authRoutes);
 
 app.get("/", (req, res) => {
   res.send("The Server is running: Use /api to Run Tests");
@@ -55,11 +54,11 @@ app.use(errorHandler);
 app
   .listen(port, async () => {
     await connectToDatabase();
-    logger.info(`Server is running on http://localhost:${port}`);
-    logger.info(
+    console.log(`Server is running on http://localhost:${port}`);
+    console.log(
       `API Documentation available at http://localhost:${port}/api-docs`
     );
   })
   .on("error", (err) => {
-    logger.error("Server Error", err);
+    console.error("Server Error", err);
   });
