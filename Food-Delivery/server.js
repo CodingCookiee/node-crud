@@ -38,6 +38,7 @@ app.use(generalLimiter);
 
 // Routes
 app.use("/api/auth", authLimiter, routes.authRoutes);
+app.use("/api/users", routes.userRoutes);
 
 app.get("/", (req, res) => {
   res.send("The Server is running: Use /api to Run Tests");
