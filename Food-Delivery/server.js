@@ -40,6 +40,8 @@ app.use(generalLimiter);
 app.use("/api/auth", authLimiter, routes.authRoutes);
 app.use("/api/users", routes.userRoutes);
 app.use("/api/restaurants", routes.restaurantRoutes);
+app.use("/api/categories", routes.categoryRoutes);
+app.use("/api/menu-items", routes.menuItemRoutes);
 
 app.get("/", (req, res) => {
   res.send("The Server is running: Use /api to Run Tests");
