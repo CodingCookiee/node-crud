@@ -42,7 +42,7 @@ app.use("/api/users", routes.userRoutes);
 app.use("/api/restaurants", routes.restaurantRoutes);
 app.use("/api/categories", routes.categoryRoutes);
 app.use("/api/menu-items", routes.menuItemRoutes);
-app.use("/api/cart", routes.cartRoutes);
+app.use("/api/cart", routes.foodCartRoutes);
 
 app.get("/", (req, res) => {
   res.send("The Server is running: Use /api to Run Tests");

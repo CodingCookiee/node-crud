@@ -1,4 +1,4 @@
-import { Cart } from "../models/cart.model.js";
+import { Cart } from "../models/foodCart.model.js";
 import { MenuItem } from "../models/menuItem.model.js";
 import { Restaurant } from "../models/restaurant.model.js";
 import { createError } from "../lib/createError.util.js";
@@ -15,32 +15,33 @@ const calculateCartTotals = (cart) => {
 
 export const cartService = {
   addItemToCart: async (userId, itemData) => {
-    const { menuItemId, quantity, selectedAddOns } = itemData;
+    const { menuItemId, quantity, selectedAddOns = [] } = itemData;
 
-    const menuItem = await MenuItem.findOne(menuItemId).populate(
+    const menuItem = await MenuItem.findById(menuItemId).populate(
       "restaurantId"
     );
-    if (!menuItem || !menuItem.isActive) {
-      throw createError(404, "Menu item not found or inactive");
+    if (!menuItem || !menuItem.isActive || !menuItem.isAvailable) {
+      throw createError(404, "Menu item not found or unavailable");
     }
 
-    let cart = await Cart.findOne(userid);
+    let cart = await Cart.findOne({ userId });
 
     //  check if cart is from different restaurant
     if (
       cart &&
+      cart.restaurantId &&
       cart.restaurantId.toString() !== menuItem.restaurantId._id.toString()
     ) {
       throw createError(
         400,
-        "Cannot add items from different restaurants to the same cart"
+        "Cannot add items from different restaurants. Clear cart first."
       );
     }
 
     if (!cart) {
       cart = new Cart({
-        userid,
-        restaurantId: menuitem.restaurantId._id,
+        userId,
+        restaurantId: menuItem.restaurantId._id,
         items: [],
       });
     }
@@ -53,10 +54,11 @@ export const cartService = {
     const itemTotal = (menuItem.price + addOnsTotal) * quantity;
 
     //  check if item exist already
-    const existingItemIndex = cart.items.findIndex((item) => {
-      item.menuItemId.toString() === menuItemId &&
-        JSON.stringify(item.selectedAddOns) === JSON.stringify(selectedAddOns);
-    });
+    const existingItemIndex = cart.items.findIndex(
+      (item) =>
+        item.menuItemId.toString() === menuItemId &&
+        JSON.stringify(item.selectedAddOns) === JSON.stringify(selectedAddOns)
+    );
 
     if (existingItemIndex > -1) {
       cart.items[existingItemIndex].quantity += quantity;
@@ -81,10 +83,10 @@ export const cartService = {
   getCart: async (userId) => {
     const cart = await Cart.findOne({ userId })
       .populate("restaurantId", "name")
-      .populate("items.menuItemId", "name price");
+      .populate("items.menuItemId", "name price image");
 
     if (!cart) {
-      return { userId, items: [], subtotal: 0, deliveryFee: 0, total: 0 };
+      return { userId, items: [], subtotal: 0, tax: 0, deliveryFee: 0, total: 0 };
     }
 
     return cart;
