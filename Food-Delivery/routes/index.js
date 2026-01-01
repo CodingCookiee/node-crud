@@ -3,6 +3,7 @@ import userRoutes from "./user.route.js";
 import restaurantRoutes from "./restaurant.route.js";
 import categoryRoutes from "./category.route.js";
 import menuItemRoutes from "./menuItem.route.js";
+import foodCartRoutes from "./foodCart.route.js";
 
 export default {
   authRoutes,
@@ -10,4 +11,5 @@ export default {
   restaurantRoutes,
   categoryRoutes,
   menuItemRoutes,
+  foodCartRoutes,
 };
