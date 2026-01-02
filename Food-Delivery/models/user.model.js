@@ -54,7 +54,6 @@ const userSchema = new mongoose.Schema(
         type: String,
         enum: ["bike", "scooter", "car"],
       },
-      vehicleNumber: String,
       licenseNumber: String,
       isApproved: {
         type: Boolean,
@@ -65,8 +64,16 @@ const userSchema = new mongoose.Schema(
         default: false,
       },
       currentLocation: {
-        lat: Number,
-        lng: Number,
+        lat: { type: Number },
+        lng: { type: Number },
+      },
+      rating: {
+        average: { type: Number, default: 0, min: 0, max: 5 },
+        count: { type: Number, default: 0 },
+      },
+      totalEarnings: {
+        type: Number,
+        default: 0,
       },
     },
     isActive: {

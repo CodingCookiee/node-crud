@@ -44,6 +44,7 @@ app.use("/api/categories", routes.categoryRoutes);
 app.use("/api/menu-items", routes.menuItemRoutes);
 app.use("/api/cart", routes.foodCartRoutes);
 app.use("/api/orders", routes.orderRoutes);
+app.use("/api/drivers", routes.driverRoutes);
 
 app.get("/", (req, res) => {
   res.send("The Server is running: Use /api to Run Tests");
