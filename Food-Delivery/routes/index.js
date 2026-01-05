@@ -8,6 +8,7 @@ import orderRoutes from "./orderManagement.route.js";
 import driverRoutes from "./driver.route.js";
 import orderAssignmentRoutes from "./orderAssignment.route.js";
 import stripePaymentRoutes from "./stripePayment.route.js";
+import reviewRoutes from "./food-reviews.route.js";
 
 
 
@@ -21,5 +22,6 @@ export default {
   orderRoutes,
   driverRoutes,
   orderAssignmentRoutes,
-  stripePaymentRoutes
+  stripePaymentRoutes,
+  reviewRoutes,
 };

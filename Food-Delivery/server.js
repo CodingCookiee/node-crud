@@ -47,6 +47,7 @@ app.use("/api/orders", routes.orderRoutes);
 app.use("/api/drivers", routes.driverRoutes);
 app.use("/api/order-assignment", routes.orderAssignmentRoutes);
 app.use("/api/payments", paymentLimiter, routes.stripePaymentRoutes);
+app.use("/api/reviews", routes.reviewRoutes);
 
 app.get("/", (req, res) => {
   res.send("The Server is running: Use /api to Run Tests");
