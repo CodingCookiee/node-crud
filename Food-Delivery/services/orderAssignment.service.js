@@ -2,7 +2,7 @@ import { Order } from "../models/orderManagement.model.js";
 import { User } from "../models/user.model.js";
 import { Restaurant } from "../models/restaurant.model.js";
 import { createError } from "../lib/createError.util.js";
-import { emitOrderAssigned } from "../utils/socketEvents.js";
+import { emitOrderAssigned } from "../lib/socketEvents.utils.js";
 
 export const orderAssignmentService = {
   findNearbyDrivers: async (restaurantLocation, radius = 10) => {

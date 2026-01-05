@@ -7,16 +7,19 @@ export const emitOrderStatusUpdate = (
   driverId,
   orderData
 ) => {
+  const io = getIO();
   // Notify customers
+
   io.to(`user:${customerId}`).emit("orderStatusUpdated", orderData);
-
   // Notify restaurant owners
-  io.to(`user:${restaurantOwnerId}`).emit("orderStatusUpdated", orderData);
 
+  io.to(`user:${restaurantOwnerId}`).emit("orderStatusUpdated", orderData);
   // Notify drivers
-  io.to(`user:${driverId}`).emit("orderStatusUpdated", orderData);
+
+  if (driverId) io.to(`user:${driverId}`).emit("orderStatusUpdated", orderData);
 
   // Notify Order room
+
   io.to(`order:${orderId}`).emit("orderStatusUpdated", orderData);
 };
 

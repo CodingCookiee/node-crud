@@ -1,7 +1,7 @@
 import { User } from "../models/user.model.js";
 import { Order } from "../models/orderManagement.model.js";
 import { createError } from "../lib/createError.util.js";
-import { emitDriverLocationUpdate } from "../utils/socketEvents.js";
+import { emitDriverLocationUpdate } from "../lib/socketEvents.utils.js";
 
 export const driverService = {
   updateDriverProfile: async (userId, profileData) => {
