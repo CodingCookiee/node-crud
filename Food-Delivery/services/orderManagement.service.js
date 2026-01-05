@@ -3,6 +3,7 @@ import { Cart } from "../models/foodCart.model.js";
 import { Restaurant } from "../models/restaurant.model.js";
 import { User } from "../models/user.model.js";
 import { createError } from "../lib/createError.util.js";
+import { emitOrderStatusUpdate, emitNewOrder } from "../utils/socketEvents.js";
 
 export const orderService = {
   createOrder: async (userId, orderData) => {
@@ -48,6 +49,10 @@ export const orderService = {
     });
 
     await order.save();
+
+    // Emit new order to restaurant
+    const restaurant = await Restaurant.findById(order.restaurantId);
+    emitNewOrder(restaurant.ownerId.toString(), order);
 
     // Clear cart after order
     cart.items = [];
@@ -185,6 +190,17 @@ export const orderService = {
 
     order.status = newStatus;
     await order.save();
+
+    // Emit status update
+    const restaurant = await Restaurant.findById(order.restaurantId);
+    emitOrderStatusUpdate(
+      orderId,
+      order.customerId.toString(),
+      restaurant.ownerId.toString(),
+      order.driverId?.toString(),
+      order
+    );
+
     return order;
   },
 
@@ -205,7 +221,10 @@ export const orderService = {
     if (
       userRole !== "admin" &&
       order.customerId.toString() !== userId &&
-      !(userRole === "restaurant" && order.restaurantId.ownerId.toString() === userId)
+      !(
+        userRole === "restaurant" &&
+        order.restaurantId.ownerId.toString() === userId
+      )
     ) {
       throw createError(403, "Access denied");
     }

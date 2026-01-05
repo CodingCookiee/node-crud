@@ -1,6 +1,7 @@
 import { User } from "../models/user.model.js";
 import { Order } from "../models/orderManagement.model.js";
 import { createError } from "../lib/createError.util.js";
+import { emitDriverLocationUpdate } from "../utils/socketEvents.js";
 
 export const driverService = {
   updateDriverProfile: async (userId, profileData) => {
@@ -43,6 +44,18 @@ export const driverService = {
 
     user.driverDetails.currentLocation = { lat, lng };
     await user.save();
+
+    // Find active orders for this driver
+    const activeOrders = await Order.find({
+      driverId: userId,
+      status: { $in: ["picked_up", "on_the_way"] },
+    });
+
+    // Emit location to all active order rooms
+    activeOrders.forEach((order) => {
+      emitDriverLocationUpdate(order._id.toString(), { lat, lng });
+    });
+
     return user;
   },
 

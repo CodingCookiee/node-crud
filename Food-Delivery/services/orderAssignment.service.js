@@ -2,6 +2,7 @@ import { Order } from "../models/orderManagement.model.js";
 import { User } from "../models/user.model.js";
 import { Restaurant } from "../models/restaurant.model.js";
 import { createError } from "../lib/createError.util.js";
+import { emitOrderAssigned } from "../utils/socketEvents.js";
 
 export const orderAssignmentService = {
   findNearbyDrivers: async (restaurantLocation, radius = 10) => {
@@ -67,6 +68,10 @@ export const orderAssignmentService = {
 
     order.driverId = drivers[0]._id;
     await order.save();
+
+    // Emit assignment notification
+    emitOrderAssigned(order.driverId.toString(), order);
+
     return order;
   },
 
@@ -96,6 +101,10 @@ export const orderAssignmentService = {
 
     order.driverId = driverId;
     await order.save();
+
+    // Emit assignment notification
+    emitOrderAssigned(order.driverId.toString(), order);
+
     return order;
   },
 
