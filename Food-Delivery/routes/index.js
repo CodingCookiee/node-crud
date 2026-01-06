@@ -11,6 +11,7 @@ import stripePaymentRoutes from "./stripePayment.route.js";
 import reviewRoutes from "./food-reviews.route.js";
 import discountRoutes from "./discount.route.js";
 import favoriteRoutes from "./favorite.route.js";
+import adminRoutes from "./admin.route.js";
 
 export default {
   authRoutes,
@@ -26,4 +27,5 @@ export default {
   reviewRoutes,
   discountRoutes,
   favoriteRoutes,
+  adminRoutes,
 };

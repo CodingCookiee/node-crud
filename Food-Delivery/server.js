@@ -55,6 +55,7 @@ app.use("/api/payments", paymentLimiter, routes.stripePaymentRoutes);
 app.use("/api/reviews", routes.reviewRoutes);
 app.use("/api/discounts", routes.discountRoutes);
 app.use("/api/favorites", routes.favoriteRoutes);
+app.use("/api/admin", routes.adminRoutes);
 
 app.get("/", (req, res) => {
   res.send("The Server is running: Use /api to Run Tests");
