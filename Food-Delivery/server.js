@@ -53,6 +53,7 @@ app.use("/api/drivers", routes.driverRoutes);
 app.use("/api/order-assignment", routes.orderAssignmentRoutes);
 app.use("/api/payments", paymentLimiter, routes.stripePaymentRoutes);
 app.use("/api/reviews", routes.reviewRoutes);
+app.use("/api/discounts", routes.discountRoutes);
 
 app.get("/", (req, res) => {
   res.send("The Server is running: Use /api to Run Tests");
@@ -70,7 +71,7 @@ server
   .listen(port, async () => {
     await connectToDatabase();
     console.log(`Server is running on http://localhost:${port}`);
-      console.log(`Socket.io initialized`);
+    console.log(`Socket.io initialized`);
     console.log(
       `API Documentation available at http://localhost:${port}/api-docs`
     );

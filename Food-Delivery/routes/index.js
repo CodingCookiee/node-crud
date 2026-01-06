@@ -9,8 +9,7 @@ import driverRoutes from "./driver.route.js";
 import orderAssignmentRoutes from "./orderAssignment.route.js";
 import stripePaymentRoutes from "./stripePayment.route.js";
 import reviewRoutes from "./food-reviews.route.js";
-
-
+import discountRoutes from "./discount.route.js";
 
 export default {
   authRoutes,
@@ -24,4 +23,5 @@ export default {
   orderAssignmentRoutes,
   stripePaymentRoutes,
   reviewRoutes,
+  discountRoutes,
 };

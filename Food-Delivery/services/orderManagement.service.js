@@ -3,11 +3,15 @@ import { Cart } from "../models/foodCart.model.js";
 import { Restaurant } from "../models/restaurant.model.js";
 import { User } from "../models/user.model.js";
 import { createError } from "../lib/createError.util.js";
-import { emitOrderStatusUpdate, emitNewOrder } from "../lib/socketEvents.utils.js";
+import { discountService } from "../services/discount.service.js";
+import {
+  emitOrderStatusUpdate,
+  emitNewOrder,
+} from "../lib/socketEvents.utils.js";
 
 export const orderService = {
   createOrder: async (userId, orderData) => {
-    const { deliveryAddressId, paymentMethod } = orderData;
+    const { deliveryAddressId, paymentMethod, promoCode } = orderData;
 
     const cart = await Cart.findOne({ userId }).populate("restaurantId");
     if (!cart || cart.items.length === 0) {
@@ -29,6 +33,23 @@ export const orderService = {
       throw createError(400, "Restaurant is not available");
     }
 
+    let discount = 0;
+    let promoData = null;
+
+    if (promoCode) {
+      const result = await discountService.validateAndApplyDiscount(
+        promoCode,
+        userId,
+        cart.restaurantId.toString(),
+        cart.subtotal
+      );
+      discount = result.discountAmount;
+      promoData = { code: result.code, discountAmount: discount };
+      await discountService.incrementUsage(result.discountId);
+    }
+
+    const total = cart.subtotal + cart.tax + cart.deliveryFee - discount;
+
     const order = new Order({
       customerId: userId,
       restaurantId: cart.restaurantId,
@@ -43,7 +64,9 @@ export const orderService = {
       subtotal: cart.subtotal,
       tax: cart.tax,
       deliveryFee: cart.deliveryFee,
-      total: cart.total,
+      discount,
+      promoCode: promoData,
+      total,
       estimatedDeliveryTime: restaurant.deliveryTime || 30,
       paymentMethod: paymentMethod || "cash",
     });
