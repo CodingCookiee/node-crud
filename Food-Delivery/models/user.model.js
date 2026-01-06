@@ -48,33 +48,43 @@ const userSchema = new mongoose.Schema(
     },
     // Customer-specific: multiple delivery addresses
     addresses: [addressSchema],
+    favoriteRestaurants: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Restaurant",
+      },
+    ],
+    favoriteMenuItems: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "MenuItem",
+      },
+    ],
     // Driver-specific fields
-    driverDetails: {
-      vehicleType: {
-        type: String,
-        enum: ["bike", "scooter", "car"],
-      },
-      licenseNumber: String,
-      isApproved: {
-        type: Boolean,
-        default: false,
-      },
-      isAvailable: {
-        type: Boolean,
-        default: false,
-      },
-      currentLocation: {
-        lat: { type: Number },
-        lng: { type: Number },
-      },
-      rating: {
-        average: { type: Number, default: 0, min: 0, max: 5 },
-        count: { type: Number, default: 0 },
-      },
-      totalEarnings: {
-        type: Number,
-        default: 0,
-      },
+    vehicleType: {
+      type: String,
+      enum: ["bike", "scooter", "car"],
+    },
+    licenseNumber: String,
+    isApproved: {
+      type: Boolean,
+      default: false,
+    },
+    isAvailable: {
+      type: Boolean,
+      default: false,
+    },
+    currentLocation: {
+      lat: { type: Number },
+      lng: { type: Number },
+    },
+    rating: {
+      average: { type: Number, default: 0, min: 0, max: 5 },
+      count: { type: Number, default: 0 },
+    },
+    totalEarnings: {
+      type: Number,
+      default: 0,
     },
     isActive: {
       type: Boolean,

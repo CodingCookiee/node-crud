@@ -10,6 +10,7 @@ import orderAssignmentRoutes from "./orderAssignment.route.js";
 import stripePaymentRoutes from "./stripePayment.route.js";
 import reviewRoutes from "./food-reviews.route.js";
 import discountRoutes from "./discount.route.js";
+import favoriteRoutes from "./favorite.route.js";
 
 export default {
   authRoutes,
@@ -24,4 +25,5 @@ export default {
   stripePaymentRoutes,
   reviewRoutes,
   discountRoutes,
+  favoriteRoutes,
 };
